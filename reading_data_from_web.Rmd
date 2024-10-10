@@ -1,0 +1,72 @@
+---
+title: "data_wrangling II"
+output: github_document
+date: "2024-10-10"
+---
+
+```{r setup}
+library(tidyverse)
+library(rvest)
+library(httr)
+
+```
+
+```{r}
+url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+
+drug_use_html = read_html(url)
+
+drug_use_html
+
+```
+get the pieces I actually need
+```{r}
+drug_use_html %>% 
+  html_table() %>% 
+  first() %>% 
+  slice(-1)
+```
+
+```{r}
+nyc_cost_df = 
+read_html("https://www.bestplaces.net/cost_of_living/city/new_york/new_york") %>% 
+  html_table(header = TRUE)
+
+nyc_cost_df
+```
+```{r}
+swm_url = "https://www.imdb.com/list/ls070150896/"
+
+swm_html = read_html(swm_url)
+
+title_vec = 
+  swm_html |>
+  html_elements(".ipc-title-link-wrapper .ipc-title__text") |>
+  html_text()
+
+title_vec
+```
+```{r}
+nyc_water =
+  GET("https://data.cityofnewyork.us/resource/ia2d-e54m.csv") %>% 
+  content()
+
+nyc_water
+```
+```{r}
+brfss_df = 
+  GET("https://chronicdata.cdc.gov/resource/acme-vg9e.csv",
+      query = list("$limit" = 5000)) %>% 
+  content()
+
+brfss_df
+```
+```{r}
+pokemon = 
+  GET("https://pokeapi.co/api/v2/pokemon/ditto") %>% 
+  content()
+
+pokemon
+```
+
+
